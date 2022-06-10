@@ -9,52 +9,80 @@ import {
   StyleSheet,
 } from 'react-native';
 
+let timer = null;
+let ss = 0;
+let mm = 0;
+let hh = 0;
+
 function App() {
-  const [img, setImg] = useState(require('./src/biscoito.png'));
-  const [textoFrase, setTextoFrase] = useState('');
+  const [button, setButton] = useState('Iniciar');
+  const [number, setNumber] = useState('00:00:00');
+  const [lastTime, setLastTime] = useState(null);
 
-  let frases = [
-    'Siga os bons e aprenda com eles.',
-    'A vida trará coisas boas se tiver paciência.',
-    'Demonstre amor e alegria em todas as oportunidades e verá que a paz nasce dentro de si.',
-    'Não compense na ira o que lhe falta na razão.',
-    'Defeitos e virtudes são apenas dois lados da mesma moeda.',
-    'A maior de todas as torres começa no solo.',
-    'Não há que ser forte. Há que ser flexível.',
-    'Todos os dias organiza os seus cabelos, por que não faz o mesmo com o coração?',
-    'Há três coisas que jamais voltam; a flecha lançada, a palavra dita e a oportunidade perdida.',
-  ];
+  function start() {
+    if (timer !== null) {
+      clearInterval(timer);
+      timer = null;
+      setButton('Iniciar');
+    } else {
+      timer = setInterval(() => {
+        ss++;
+        if (ss == 60) {
+          ss = 0;
+          mm++;
+        }
+        if (mm == 60) {
+          mm = 0;
+          hh++;
+        }
 
-  function quebraBiscoito() {
-    setImg(require('./src/biscoitoAberto.png'));
+        let format =
+          (hh < 10 ? `0` + hh : hh) +
+          ':' +
+          (mm < 10 ? '0' + mm : mm) +
+          ':' +
+          (ss < 10 ? '0' + ss : ss);
 
-    let numeroAleatorio = Math.floor(Math.random() * frases.length);
-    setTextoFrase(`"${frases[numeroAleatorio]}"`);
+        setNumber(format);
+      }, 100);
+      setButton('Pausar');
+    }
   }
+  function clear() {
+    setLastTime(number);
 
-  function reiniciarBiscoito() {
-    setImg(require('./src/biscoito.png'));
-    setTextoFrase('');
+    if (timer !== null) {
+      clearInterval(timer);
+      timer = null;
+      setButton('Iniciar');
+    }
+
+    setNumber('00:00:00');
+    ss = 0;
+    mm = 0;
+    hh = 0;
   }
 
   return (
     <View style={styles.container}>
-      <Image source={img} style={styles.img}></Image>
-      <Text style={styles.textoFrase}>{textoFrase}</Text>
+      <Image source={require('./src/crono.png')} />
+      <Text style={styles.timer}>{number}</Text>
 
-      <TouchableOpacity style={styles.button} onPress={quebraBiscoito}>
-        <View style={styles.btnArea}>
-          <Text style={styles.btnTxt}>Querar biscoito</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.btnArea}>
+        <TouchableOpacity style={styles.btn} onPress={start}>
+          <Text style={styles.btnText}>{button}</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity
-        style={[styles.button, {borderColor: '#121212'}]}
-        onPress={reiniciarBiscoito}>
-        <View style={styles.btnArea}>
-          <Text style={[styles.btnTxt, {color: '#121212'}]}>Reiniciar</Text>
-        </View>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.btn} onPress={clear}>
+          <Text style={styles.btnText}>Limpar</Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.registerArea}>
+        <Text style={styles.registerText}>
+          {lastTime ? 'Ultimo tempo: ' + lastTime : ''}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -62,39 +90,42 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#00aeef',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  img: {
-    width: 230,
-    height: 230,
-  },
-  textoFrase: {
-    fontSize: 20,
-    color: '#dd7b22',
-    margin: 30,
-    fontStyle: 'italic',
-    textAlign: 'center',
-  },
-  button: {
-    width: 230,
-    height: 50,
-    borderWidth: 2,
-    borderColor: 'orange',
-    borderRadius: 25,
-    margin: 10,
-    fontStyle: 'italic',
-    textAlign: 'center',
+  timer: {
+    marginTop: -160,
+    fontSize: 45,
+    fontWeight: 'bold',
+    color: '#FFF',
   },
   btnArea: {
+    flexDirection: 'row',
+    marginTop: 130,
+    height: 40,
+  },
+  btn: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#fff',
+    height: 40,
+    margin: 20,
+    borderRadius: 9,
   },
-  btnTxt: {
-    fontSize: 17,
+  btnText: {
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#dd7b22',
+    color: '#00aeef',
+  },
+  registerArea: {
+    marginTop: 50,
+  },
+  registerText: {
+    fontSize: 25,
+    color: '#fff',
+    fontStyle: 'italic',
   },
 });
 
