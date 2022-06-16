@@ -6,83 +6,75 @@ import {
   Button,
   Image,
   TouchableOpacity,
+  ScrollView,
   StyleSheet,
+  FlatList,
+  Switch,
 } from 'react-native';
-
-let timer = null;
-let ss = 0;
-let mm = 0;
-let hh = 0;
+import Header from './src/header';
+import List from './src/list';
+import {Picker} from '@react-native-picker/picker';
+import Slider from '@react-native-community/slider';
 
 function App() {
-  const [button, setButton] = useState('Iniciar');
-  const [number, setNumber] = useState('00:00:00');
-  const [lastTime, setLastTime] = useState(null);
-
-  function start() {
-    if (timer !== null) {
-      clearInterval(timer);
-      timer = null;
-      setButton('Iniciar');
-    } else {
-      timer = setInterval(() => {
-        ss++;
-        if (ss == 60) {
-          ss = 0;
-          mm++;
-        }
-        if (mm == 60) {
-          mm = 0;
-          hh++;
-        }
-
-        let format =
-          (hh < 10 ? `0` + hh : hh) +
-          ':' +
-          (mm < 10 ? '0' + mm : mm) +
-          ':' +
-          (ss < 10 ? '0' + ss : ss);
-
-        setNumber(format);
-      }, 100);
-      setButton('Pausar');
-    }
-  }
-  function clear() {
-    setLastTime(number);
-
-    if (timer !== null) {
-      clearInterval(timer);
-      timer = null;
-      setButton('Iniciar');
-    }
-
-    setNumber('00:00:00');
-    ss = 0;
-    mm = 0;
-    hh = 0;
-  }
+  const [feed, setFedd] = useState([
+    {
+      id: '1',
+      nome: 'Lucas Silva',
+      descricao: 'Mais um dia de muitos bugs :)',
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png',
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto1.png',
+      likeada: true,
+      likers: 1,
+    },
+    {
+      id: '2',
+      nome: 'Matheus',
+      descricao: 'Isso sim é ser raiz!!!!!',
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png',
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto2.png',
+      likeada: false,
+      likers: 0,
+    },
+    {
+      id: '3',
+      nome: 'Jose Augusto',
+      descricao:
+        'Bora trabalhar, hoje estou começando em um projeto novo aqui no sujeito, desde o backend ao frontend',
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png',
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto3.png',
+      likeada: false,
+      likers: 3,
+    },
+    {
+      id: '4',
+      nome: 'Gustavo Henrique',
+      descricao: 'Isso sim que é TI!',
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png',
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto4.png',
+      likeada: true,
+      likers: 1,
+    },
+    {
+      id: '5',
+      nome: 'Guilherme',
+      descricao: 'Boa tarde galera do insta...',
+      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png',
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto5.png',
+      likeada: false,
+      likers: 32,
+    },
+  ]);
 
   return (
     <View style={styles.container}>
-      <Image source={require('./src/crono.png')} />
-      <Text style={styles.timer}>{number}</Text>
-
-      <View style={styles.btnArea}>
-        <TouchableOpacity style={styles.btn} onPress={start}>
-          <Text style={styles.btnText}>{button}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.btn} onPress={clear}>
-          <Text style={styles.btnText}>Limpar</Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.registerArea}>
-        <Text style={styles.registerText}>
-          {lastTime ? 'Ultimo tempo: ' + lastTime : ''}
-        </Text>
-      </View>
+      <Header />
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        keyExtractor={item => item.id}
+        data={feed}
+        renderItem={({item}) => <List data={item} />}
+      />
     </View>
   );
 }
@@ -90,42 +82,7 @@ function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#00aeef',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  timer: {
-    marginTop: -160,
-    fontSize: 45,
-    fontWeight: 'bold',
-    color: '#FFF',
-  },
-  btnArea: {
-    flexDirection: 'row',
-    marginTop: 130,
-    height: 40,
-  },
-  btn: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#fff',
-    height: 40,
-    margin: 20,
-    borderRadius: 9,
-  },
-  btnText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#00aeef',
-  },
-  registerArea: {
-    marginTop: 50,
-  },
-  registerText: {
-    fontSize: 25,
-    color: '#fff',
-    fontStyle: 'italic',
   },
 });
 
