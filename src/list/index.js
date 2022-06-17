@@ -2,104 +2,118 @@ import React from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 
 function List(props) {
-  function carregaIcone(likeada) {
-    return likeada ? require('../likeada.png') : require('../like.png');
+  function fotoCurtida(likeada) {
+    if (likeada === true) {
+      return require('../likeada.png');
+    } else {
+      return require('../like.png');
+    }
   }
 
-  function mostraLikes(likers) {
-    if (likers === 0) {
+  function curtidas(likes) {
+    if (likes === 0) {
       return;
+    } else if (likes == 1) {
+      return <Text style={styles.curtidas}> {likes} curtida</Text>;
     } else {
-      return (
-        <Text style={Styles.likes}>
-          {likers} {likers > 1 ? 'curtidas' : 'curtida'}
-        </Text>
-      );
+      return <Text style={styles.curtidas}> {likes} curtidas</Text>;
     }
   }
 
   return (
-    <View>
-      <View style={Styles.viewPerfil}>
-        <Image source={{uri: props.data.imgperfil}} style={Styles.imgPerfil} />
-        <Text style={Styles.nomeUser}>{props.data.nome}</Text>
+    <View style={styles.card}>
+      <View style={styles.cardHeader}>
+        <Image source={{uri: props.data.imgPerfil}} style={styles.imgPerfil} />
+        <Text style={styles.nome}>{props.data.nome}</Text>
       </View>
       <Image
         resizeMode="cover"
         source={{uri: props.data.imgPublicacao}}
-        style={Styles.fotoPublicada}
+        style={styles.imgPublicacao}
       />
-      <View style={Styles.areaBtn}>
-        <TouchableOpacity style={Styles.btnSend}>
-          <Image
-            source={carregaIcone(props.data.likeada)}
-            style={Styles.iconeLike}
-          />
-        </TouchableOpacity>
+      <View style={styles.subCard}>
+        <View style={styles.icons}>
+          <TouchableOpacity onPress={props.event}>
+            <Image
+              source={fotoCurtida(props.data.likeada)}
+              style={styles.iconsBtn}
+            />
+          </TouchableOpacity>
 
-        <TouchableOpacity style={Styles.btnSend}>
-          <Image source={require('../comment.png')} style={Styles.iconeLike} />
-        </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={require('../comment.png')} style={styles.iconsBtn} />
+          </TouchableOpacity>
 
-        <TouchableOpacity style={Styles.btnSend}>
-          <Image source={require('../send.png')} style={Styles.iconeLike} />
-        </TouchableOpacity>
+          <TouchableOpacity>
+            <Image source={require('../send.png')} style={styles.iconsBtn} />
+          </TouchableOpacity>
+        </View>
+
+        <View>
+          {curtidas(props.data.likes)}
+          <View style={styles.subName}>
+            <Text style={styles.nomeSub}>{props.data.nome}</Text>
+            <Text style={styles.descricao}> {props.data.descricao}</Text>
+          </View>
+        </View>
       </View>
-
-      {mostraLikes(props.data.likers)}
-
-      <Text style={Styles.nomeRodape}>{props.data.nome}</Text>
-      <Text style={Styles.descRodape}>{props.data.descricao}</Text>
     </View>
   );
 }
-const Styles = StyleSheet.create({
-  viewPerfil: {
-    flexDirection: 'row',
+
+const styles = StyleSheet.create({
+  card: {
     flex: 1,
+    marginBottom: 10,
+  },
+  cardHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: 8,
+    height: 55,
   },
   imgPerfil: {
-    width: 50,
-    height: 50,
+    width: 44,
+    height: 44,
     borderRadius: 25,
+    margin: 7,
   },
-  nomeUser: {
-    paddingLeft: 5,
-    fontSize: 22,
-    color: '#000',
-  },
-  fotoPublicada: {
+  imgPublicacao: {
     height: 400,
     alignItems: 'center',
+    marginBottom: 5,
   },
-  areaBtn: {
-    flexDirection: 'row',
-    padding: 10,
-  },
-  iconeLike: {
-    width: 25,
-    height: 25,
-  },
-  btnSend: {
-    paddingLeft: 7,
-  },
-  likes: {
-    fontWeight: 'bold',
-    marginLeft: 5,
-    marginBottom: 1,
-  },
-  nomeRodape: {
+  nome: {
+    color: '#000',
     fontSize: 18,
+  },
+  subCard: {
+    height: 100,
+  },
+  icons: {
+    flexDirection: 'row',
+    paddingLeft: 3,
+  },
+  iconsBtn: {
+    height: 27,
+    width: 27,
+    margin: 3,
+  },
+  curtidas: {
     fontWeight: 'bold',
     color: '#000',
-    paddingLeft: 5,
+    marginTop: 5,
+    marginLeft: 4,
   },
-  descRodape: {
-    paddingLeft: 5,
-    paddingBottom: 10,
+  nomeSub: {
+    color: '#000',
+    fontWeight: 'bold',
     fontSize: 15,
+    marginTop: 3,
+    marginLeft: 4,
+  },
+  descricao: {
+    fontWeight: 'normal',
+    marginLeft: 2,
   },
 });
 

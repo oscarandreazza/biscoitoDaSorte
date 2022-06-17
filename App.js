@@ -11,60 +11,50 @@ import {
   FlatList,
   Switch,
 } from 'react-native';
+
 import Header from './src/header';
 import List from './src/list';
 import {Picker} from '@react-native-picker/picker';
 import Slider from '@react-native-community/slider';
 
 function App() {
-  const [feed, setFedd] = useState([
+  const [feed, setFeed] = useState([
     {
       id: '1',
-      nome: 'Lucas Silva',
-      descricao: 'Mais um dia de muitos bugs :)',
-      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png',
-      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto1.png',
-      likeada: true,
-      likers: 1,
+      nome: 'Oscar Andreazza',
+      descricao: 'Estou aprendendo react native',
+      imgPerfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png',
+      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto3.png',
+      likeada: false,
+      likes: 4,
     },
     {
       id: '2',
-      nome: 'Matheus',
-      descricao: 'Isso sim é ser raiz!!!!!',
-      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png',
-      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto2.png',
-      likeada: false,
-      likers: 0,
-    },
-    {
-      id: '3',
-      nome: 'Jose Augusto',
-      descricao:
-        'Bora trabalhar, hoje estou começando em um projeto novo aqui no sujeito, desde o backend ao frontend',
-      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png',
+      nome: 'Oscar Andreazza',
+      descricao: 'Estou aprendendo react native',
+      imgPerfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil3.png',
       imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto3.png',
       likeada: false,
-      likers: 3,
-    },
-    {
-      id: '4',
-      nome: 'Gustavo Henrique',
-      descricao: 'Isso sim que é TI!',
-      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil1.png',
-      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto4.png',
-      likeada: true,
-      likers: 1,
-    },
-    {
-      id: '5',
-      nome: 'Guilherme',
-      descricao: 'Boa tarde galera do insta...',
-      imgperfil: 'https://sujeitoprogramador.com/instareact/fotoPerfil2.png',
-      imgPublicacao: 'https://sujeitoprogramador.com/instareact/foto5.png',
-      likeada: false,
-      likers: 32,
+      likes: 4,
     },
   ]);
+
+  function curtiu() {
+    const newFeed = Object.assign(feed);
+
+    // const foundIndex = feed.findIndex(el => {
+    //   return (el.id = id);
+    // });
+    //Em construção
+
+    if (newFeed[0].likeada == false) {
+      setFeed(newFeed[0].likes++);
+      setFeed([{...newFeed[0], likeada: true}]);
+    } else {
+      setFeed(newFeed[0].likes--);
+      setFeed([{...newFeed[0], likeada: false}]);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -73,7 +63,7 @@ function App() {
         showsVerticalScrollIndicator={false}
         keyExtractor={item => item.id}
         data={feed}
-        renderItem={({item}) => <List data={item} />}
+        renderItem={({item}) => <List data={item} event={curtiu} />}
       />
     </View>
   );
